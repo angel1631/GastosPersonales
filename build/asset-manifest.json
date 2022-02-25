@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/GastosPersonales/static/js/main.c9f11a4e.js",
+    "index.html": "/GastosPersonales/index.html",
+    "main.c9f11a4e.js.map": "/GastosPersonales/static/js/main.c9f11a4e.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.c9f11a4e.js"
+  ]
+}

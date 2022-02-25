@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Context } from "../../Context";
 import {getDateShort} from '../../Core/functions/date';
+import {format_currency} from '../../Core/functions/number';
 
 function ListPrev({item_searched}){
     let {states: {buys}} = React.useContext(Context);
@@ -13,18 +14,22 @@ function ListPrev({item_searched}){
             });
         });    
     }
+    match_items = match_items.slice(-3);
     return(
-        <ul> 
-            {match_items.map((item,index)=>{
-                return(
-                <li key={index}>
-                    <label>{item.buy}</label>
-                    <label>{item.date}</label>
-                    <label>{item.item}</label>
-                    <label>{item.price}</label>
-                </li>);
-            })}  
-        </ul>
+        <div>
+            <h2 className="font-bold text-xl p-2 text-right">Compras anteriores</h2>
+            <div className="w-full flex flex-col divide-y divide-zinc-700 bg-white shadow-lg rounded-lg px-2"> 
+                {match_items.map((item,index)=>{
+                    return(
+                    <div className="w-full flex py-2" key={index}>
+                        <span className="px-2">{item.buy}</span>
+                        <span className="px-2">{item.date}</span>
+                        <span className="px-2">{item.item}</span>
+                        <span className="px-2">{format_currency({val:item.price})}</span>
+                    </div>);
+                })}  
+            </div>
+        </div>
     );
 }
 export {ListPrev};
