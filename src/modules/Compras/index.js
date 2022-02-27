@@ -1,10 +1,12 @@
 import React from "react";
-import { FormGeneric } from "../../Core/components/Form";
+import { GenericForm } from "../../Core/components/GenericForm";
 
 import { List } from "./List";
 import { Context } from '../../Context';
-import { BuyList } from "./BuyList";
+
 import {ListPrev} from './ListPrev';
+import { GenericList } from "../../Core/components/GenericList";
+import {getDateShort} from '../../Core/functions/date';
 
 function Compras() {
   let {states} = React.useContext(Context);
@@ -53,26 +55,32 @@ function Compras() {
   let create_buy = ({title})=>{
     if(title=="") throw "El campo titulo no es valido";
     let id = Math.floor(Math.random() * 10000);
-    let createdAt = new Date();
+    let createdAt = getDateShort(new Date());
+
     states.buys[1]([...states.buys[0],{title,id, createdAt,detail:[]}]);
   }
   
   
   return (
       <div className="w-full h-full">
-          {form_buy_visible[0] && buy_active[0][0]===0 && <FormGeneric title="Agregar Compras" form_state={form_buy} fields={fields_buy} function_send={create_buy} form_visible={form_buy_visible[1]}/>}
+          {form_buy_visible[0] && buy_active[0][0]===0 && <GenericForm title="Agregar Compras" form_state={form_buy} fields={fields_buy} function_send={create_buy} state_show_form={form_buy_visible[1]}/>}
          
-          {buy_active[0][0]===0 && <BuyList buy_active={buy_active} form_buy_visible={form_buy_visible[1]}/>}
+          {buy_active[0][0]===0 && <GenericList 
+                                      title="Compras" 
+                                      lineOnClick={({line,index})=>{buy_active[1]([line.id, index])}}
+                                      state_show_form={form_buy_visible}
+                                      state_list={states.buys}
+                                      fields_display={[{col:"title", wid:'1/2'}, {col: "createdAt", wid: '1/2'}]} />}
           
           {buy_active[0][0]!==0 && 
             <div className="w-full">
-              <div className="ml-2 px-2 w-8 h-8 pt-1 bg-slate-500 rounded-full text-center align-middle">
-                <i onClick={()=>buy_active[1]([0,-1])} className="text-white font-bold ri-arrow-go-back-line"></i>
+              <div onClick={()=>buy_active[1]([0,-1])} className="ml-2 px-2 w-8 h-8 pt-1 bg-slate-500 rounded-full text-center align-middle">
+                <i  className="text-white font-bold ri-arrow-go-back-line"></i>
               </div>
               
-              {form_item_visible[0] && <FormGeneric title="Agregar Items" form_state={form_item} fields={fields} function_send={create_line_product} form_visible={form_item_visible[1]}>
+              {form_item_visible[0] && <GenericForm title="Agregar Items" form_state={form_item} fields={fields} function_send={create_line_product} state_show_form={form_item_visible[1]}>
                                         <ListPrev item_searched={form_item[0].producto} />
-                                      </FormGeneric>}
+                                      </GenericForm>}
               
               
               <List headers={["producto","cantidad","precio","total"]} buy_active={buy_active[0]} form_state={form_item} form_item_visible={form_item_visible[1]}/>

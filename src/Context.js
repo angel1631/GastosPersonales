@@ -8,6 +8,7 @@ function ContextProvider(props){
     let states = {};
     states.buys = useLocalStorage({nameItem: 'buys', defaultValue:[]});
     states.items = useLocalStorage({nameItem: 'items', defaultValue:[]});
+    
     return (
         <Context.Provider value={{
             states
