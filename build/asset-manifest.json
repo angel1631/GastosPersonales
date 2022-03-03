@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.js": "/GastosPersonales/static/js/main.c076a07f.js",
+    "main.js": "/GastosPersonales/static/js/main.adf316bb.js",
     "static/media/banner1.png": "/GastosPersonales/static/media/banner1.ac9c3f8c289a31ae5b33.png",
     "static/media/logo.png": "/GastosPersonales/static/media/logo.6f42a3b9c447a5500529.png",
     "index.html": "/GastosPersonales/index.html",
-    "main.c076a07f.js.map": "/GastosPersonales/static/js/main.c076a07f.js.map"
+    "main.adf316bb.js.map": "/GastosPersonales/static/js/main.adf316bb.js.map"
   },
   "entrypoints": [
-    "static/js/main.c076a07f.js"
+    "static/js/main.adf316bb.js"
   ]
 }
