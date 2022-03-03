@@ -21,7 +21,7 @@ function App(){
                         <Route exact path="/compras" element={<Compras/>}/>
                         <Route exact path="/Presupuestos" element={<Presupuestos/>}/>
                         <Route exact path="/Gastos" element={<Gastos/>} />
-                        <Route path="*" element={<NotFound/>}/>
+                        <Route path="*" element={<Home/>}/>
                     </Routes>
                 </div>
             </div>
