@@ -16,7 +16,7 @@ function Nav({title, menu_active}){
                 </Link>
                 <p className="text-xl text-slate-600 font-bold">{title}</p>
             </div>
-            <div onClick={()=>menu_active[1](false)} className={` ${menu_active[0]==false && 'hidden'} flex space-x-4 bg-white `}>
+            <div onClick={()=>menu_active[1](false)} className={` ${menu_active[0]==false && 'hidden'} flex space-x-4 bg-white md:flex`}>
                 <Link className="nav-link flex space-x-2 text-gray-500 hover:text-gray-700 focus:text-gray-700 p-0" to="/">
                     <GoHome className=' text-blue-400 mt-1' />
                     <label>Home</label>

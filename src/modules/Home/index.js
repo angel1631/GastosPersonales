@@ -9,7 +9,7 @@ function Home(){
             <div className='w-full h-full'>
                 <img className="" src={banner1} />
             </div>
-            <div className=" rounded-lg absolute text-justify top-1/2 lg:top-1/4 lg:ml-20 lg:text-3xl  font-bold bg-cyan-100 p-2 shadow-lg bg-opacity-60">
+            <div className=" rounded-lg absolute text-justify top-48 lg:top-1/4 lg:ml-20 lg:text-3xl  font-bold bg-cyan-100 p-2 shadow-lg bg-opacity-60">
                 Controla tus finanzas personales
             </div>
             <div className='mt-1 bg-lime-400 p-2 rounded-lg shadow-xl  bg-opacity-20 lg:font-bold lg:ml-60 lg:-mt-24 lg:absolute '>
