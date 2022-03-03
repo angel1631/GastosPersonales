@@ -2,6 +2,7 @@ import React from "react";
 import { CuadroResumen } from "./CuadroResumen";
 import {format_currency} from '../../Core/functions/number';
 import { ContainerList } from "../../Core/components/ContainerList";
+import {FaEdit, FaTrash} from 'react-icons/fa';
 
 function List({buy_active, form_state, form_item_visible, headers=[], buys}){
     let [form,setForm] = form_state;
@@ -31,10 +32,10 @@ function List({buy_active, form_state, form_item_visible, headers=[], buys}){
                             <div className="w-2/12 px-1 ">{format_currency({val:line.precio})}</div>
                             <div className="w-2/12 px-1 ">{format_currency({val:line.total})}</div>
                             <div className="w-1/12 px-1 ">
-                                <button onClick={()=>{editar_item(index)}}><i className="text-blue-400 text-xl ri-edit-2-fill"></i></button>
+                                <button onClick={()=>{editar_item(index)}}><FaEdit className=" text-blue-400 text-xl" /></button>
                             </div>
                             <div className="w-1/12 px1 ">
-                                <button onClick={()=>delete_item(index)}><i className="text-red-400 text-xl ri-delete-bin-5-fill"></i></button>
+                                <button onClick={()=>delete_item(index)}><FaTrash className=" text-orange-700 text-xl"></FaTrash></button>
                             </div>
                         </div>
                     ))

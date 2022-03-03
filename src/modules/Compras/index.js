@@ -21,11 +21,13 @@ function Compras() {
   fields.push({id: "cantidad", description:'Cantidad', type: 'number', orden:2});
   fields.push({id: "precio", description:'Precio', type: 'number', orden:3});
   
-  let fields_buy = [{id: "title", description:'Nombre de la compra', type: 'text', orden:1}];
+  let fields_buy = [{id: "title", description:'Nombre de la compra', type: 'text', orden:1},
+                    {id: 'id', description: 'identificador de compra', type: 'number', invisible: true, required: false},
+                    {id: 'createdAt', description: 'Fecha que se realizo la compra', type: 'date', required: false}];
   let buy_active = React.useState([0,-1]);
   let form_buy_visible = React.useState(false);
   let form_item_visible = React.useState(false);
-  let form_buy = React.useState({title:''});
+  let form_buy = React.useState({title:'', createdAt: ''});
   let form_item = React.useState({id:'',producto:'',cantidad:'',precio:''});
   let borrar_data = ()=>{
     localStorage.clear();
@@ -54,12 +56,23 @@ function Compras() {
       states.items[1]([...states.items[0], producto]);
     }
   }
-  let create_buy = ({title})=>{
-    if(title=="") throw "El campo titulo no es valido";
-    let id = Math.floor(Math.random() * 10000);
-    let createdAt = getDateShort(new Date());
-
-    states.buys[1]([...states.buys[0],{title,id, createdAt,detail:[]}]);
+  let create_buy = ({id, title, createdAt})=>{
+    if(!!id){
+      let bc_compras = [...states.buys[0]];
+      bc_compras.map((item,index)=>{
+        if(item.id==id){
+          let new_item = {id,title,createdAt, detail: bc_compras[index].detail }
+          bc_compras[index] = new_item;
+        }
+      });
+      states.buys[1](bc_compras);
+    }else{
+      if(title=="") throw "El campo titulo no es valido";
+      let id = Math.floor(Math.random() * 10000);
+      let createdAt = getDateShort(new Date());
+      states.buys[1]([...states.buys[0],{title,id, createdAt,detail:[]}]);
+    }
+    
   }
   
   
@@ -75,7 +88,8 @@ function Compras() {
                   lineOnClick={({line,index})=>{buy_active[1]([line.id, index])}}
                   state_show_form={form_buy_visible}
                   state_list={states.buys}
-                  fields_display={[{col:"title", wid:'1/2'}, {col: "createdAt", wid: '1/2'}]} />
+                  fields_display={[{col:"title", wid:'1/2'}, {col: "createdAt", wid: '1/2'}]} 
+                  state_form={form_buy}/>
                 }
             </div>}
           
@@ -90,7 +104,6 @@ function Compras() {
               } 
             </div>
           }
-        
       </div>
   );
 }

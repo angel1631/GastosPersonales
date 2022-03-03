@@ -9,10 +9,12 @@ import { PresupuestoList } from "./PresupuestoList";
 function Presupuestos (){
     let presupuesto_activo = React.useState([0,-1]);
     let show_form_presupuesto = React.useState(false);
-    let form_presupuesto = React.useState({title:''});
+    let form_presupuesto = React.useState({title:'', id:'',createdAt:'',detail:''});
     let state_presupuestos = useLocalStorage({nameItem: 'presupuestos', defaultValue:[]});
     
-    let fields_presupuesto = [{id: 'title', description: 'Nombre del presupuesto', type: 'text'}];
+    let fields_presupuesto = [{id: 'id', description: 'identificador del presupuesto', type:"number", invisible:true, required:false},
+                             {id: 'title', description: 'Nombre del presupuesto', type: 'text'},
+                             {id: 'createdAt', description: 'Fecha de ingreso', type:"date", required:false}];
 
 
 
@@ -29,13 +31,28 @@ function Presupuestos (){
     fields_movimiento.push({id: 'repeticiones', description: 'Cuantas veces desea repetir el movimiento:', type:'number', required: false, depende: 'periodico'});
     fields_movimiento.push({id: 'frecuencia', description: 'Cada cuantos días desea repetir el movimiento:', type:'number', required: false, depende: 'periodico'});
     
-    let guardar_presupuesto = async ({title, inicio})=>{
-        let new_presupuesto = {title};
-        new_presupuesto.id = Math.floor(Math.random() * 10000);
-        new_presupuesto.createdAt = getDateShort(new Date()); 
-        new_presupuesto.detail = [];
-        state_presupuestos[1]([...state_presupuestos[0], new_presupuesto]);
-        presupuesto_activo[1]([new_presupuesto.id, (state_presupuestos[0].length)]);
+    let guardar_presupuesto = async ({id, title, createdAt, inicio})=>{
+        let new_presupuesto = {id,title,createdAt};
+
+        let actualizar = false;
+        if(!!id){actualizar = true;}
+        if(actualizar){
+            let bc_presupuestos = [...state_presupuestos[0]];
+            bc_presupuestos.map((item,index)=>{
+                if(item.id==id){
+                    new_presupuesto.detail = bc_presupuestos[index].detail;
+                    bc_presupuestos[index] = new_presupuesto;
+                } 
+            });
+            state_presupuestos[1](bc_presupuestos);
+        }else{
+            new_presupuesto.id = Math.floor(Math.random() * 10000);
+            if(!createdAt)
+                new_presupuesto.createdAt = getDateShort(new Date()); 
+            new_presupuesto.detail = [];
+            state_presupuestos[1]([...state_presupuestos[0], new_presupuesto]);
+            presupuesto_activo[1]([new_presupuesto.id, (state_presupuestos[0].length)]);
+        }
     }
 
     let guardar_movimiento = ({id, descripcion, monto, fecha,frecuencia, ingreso, repeticiones})=>{
@@ -91,7 +108,8 @@ function Presupuestos (){
                         lineOnClick={({line,index})=>{presupuesto_activo[1]([line.id,index])}} 
                         state_show_form={show_form_presupuesto}
                         state_list={state_presupuestos}
-                        fields_display={[{col: 'title', wid: 'full'}]} />
+                        fields_display={[{col: 'title', wid: '3/4'},{col:'createdAt', wid:'1/4'}]} 
+                        state_form={form_presupuesto}/>
                     }
                 </div>
             }

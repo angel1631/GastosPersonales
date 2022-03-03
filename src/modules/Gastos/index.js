@@ -33,7 +33,8 @@ function Gastos(){
                             state_show_form={states.show_form_gasto} 
                             state_list={states.gastos} 
                             fields_display={[{col: 'createdAt', wid:'1/4'},{col: 'descripcion', wid: '2/4'},{col:'monto', wid:'1/4'}]}
-                            order={{by: 'createdAt', type: 'date', asc: false}}>
+                            order={{by: 'createdAt', type: 'date', asc: false}}
+                            state_form={states.form_gasto}>
                 </GenericList>
                 <Resumen list={states.gastos}/>
                 </div>
@@ -47,9 +48,22 @@ export {Gastos};
 
 function guardar_gasto({item, state_save, show_form}){
     let new_item = {...item};
-    new_item.id = Math.floor(Math.random() * 10000);
-    new_item.monto = format_currency({val:new_item.monto});
-    if(!new_item.createdAt) new_item.createdAt=getDateShort(new Date()); 
-    state_save[1]([...state_save[0], new_item]);   
+    let actualizar = false;
+    if(!!new_item.id){actualizar = true;}
+    if(actualizar){
+        let bc_items = [...state_save[0]]
+        bc_items.map((item,index)=>{
+            if(item.id==new_item.id){
+                bc_items[index] = new_item;
+            }
+        });
+        state_save[1](bc_items);
+    }else{
+        new_item.id = Math.floor(Math.random() * 10000);
+        new_item.monto = format_currency({val:new_item.monto});
+        if(!new_item.createdAt) new_item.createdAt=getDateShort(new Date()); 
+        state_save[1]([...state_save[0], new_item]);   
+    }
+    
     show_form[1](false);
 }
