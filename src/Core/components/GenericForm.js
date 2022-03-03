@@ -1,12 +1,14 @@
 import React from "react"
+import { FaLine } from "react-icons/fa";
 import { AutoComplete } from "./AutoComplete";
 
 function GenericForm({title="Formulario", children, fields, url_enviar, function_send, state_show_form, form_state}){
     
     let [form,setForm] = form_state;
-    let change_input = ({e, id})=>{
+    let change_input = ({e, id, value})=>{
         let new_value = {...form};
-        new_value[id] = e.target.value;
+        
+        new_value[id] = value; 
         setForm(new_value);
     }
     function send_form({e, url_enviar}){
@@ -14,12 +16,13 @@ function GenericForm({title="Formulario", children, fields, url_enviar, function
             e.preventDefault();
             let new_item = {};
             fields.map((field)=>{
-                if(!form[field.id] && field.required != false) throw `Error no se lleno el campo ${field.id}`;
+                if(!form[field.id] && field.required != false && field.type !='switch') throw `Error no se lleno el campo ${field.id}`;
                 else {new_item[field.id] = form[field.id];}
                 return true;
             });
             function_send(new_item);
             clear_form();
+            
         }catch(error){
             alert(error);
             console.log("------------error", error);
@@ -44,7 +47,7 @@ function GenericForm({title="Formulario", children, fields, url_enviar, function
                 </div>
                 {
                     fields.map(field=>(
-                        <div className="form_line" key={field.id}>
+                        <div className={(field.depende && form[field.depende]==false) && 'hidden' || 'form-line'} key={field.id}>
                             {field.type=='radio' && 
                                 field.options.map((option,index)=>(
                                     <label key={index}>
@@ -54,7 +57,16 @@ function GenericForm({title="Formulario", children, fields, url_enviar, function
                                     </label>
                                 ))
                             }
-                            {field.type!='radio' &&
+                            {field.type=='switch' &&
+                                <div className="form-check form-switch pl-1 py-2 flex ">
+                                    <label className=" text-gray-800" htmlFor="flexSwitchCheckDefault">{field.description}</label>
+                                    <input className="form-check-input appearance-none w-9 ml-2 rounded-full h-5 
+                                                        align-top bg-gray-400 bg-no-repeat bg-contain text-zinc-800 focus:outline-none cursor-pointer shadow-sm" 
+                                            type="checkbox" checked={form[field.id]} role="switch" onChange={(e)=>change_input({e, id:field.id, value: e.target.checked})}/>
+                                    
+                                </div>
+                            }
+                            {(field.type!='radio' && field.type!='switch') &&
                                 <input className="w-full rounded-lg shadow-md p-2 mb-2" placeholder={field.description} 
                                     style={field.invisible && {display: "none"}} 
                                     type={field.type} value={form[field.id]} 
@@ -62,14 +74,14 @@ function GenericForm({title="Formulario", children, fields, url_enviar, function
                                         if(field.onBlur)
                                         field.onBlur(e);
                                     }} 
-                                    onChange={(e)=>change_input({e, id:field.id})} />
+                                    onChange={(e)=>change_input({e, id:field.id, value:e.target.value})} />
                             }
                             {field.autoComplete && <AutoComplete list={field.autoComplete} form_state={form_state} id={field.id}/>}
                         </div>
                     ))
                 }
                 {children}
-                <button className="w-full my-4 bg-sky-400 py-2 rounded-lg shadow-lg font-bold" type="submit">Enviar</button>
+                <button className="w-full my-4 bg-sky-400 py-2 rounded-lg shadow-lg font-bold" type="submit">Guardar</button>
                 
             </form>
         </div>

@@ -1,12 +1,11 @@
 import React from "react";
 import { CuadroResumen } from "./CuadroResumen";
-import { Context } from '../../Context';
 import {format_currency} from '../../Core/functions/number';
+import { ContainerList } from "../../Core/components/ContainerList";
 
-function List({buy_active, form_state, form_item_visible, headers=[]}){
+function List({buy_active, form_state, form_item_visible, headers=[], buys}){
     let [form,setForm] = form_state;
-    let {states:{buys}} = React.useContext(Context);
-    let buy = buys[0][buy_active[1]]; 
+    let buy = buys[0][buy_active[0][1]]; 
     if(buy.detail.length>0 && headers.length==0)
         headers = Object.keys(buy.detail[0]);
     
@@ -18,12 +17,11 @@ function List({buy_active, form_state, form_item_visible, headers=[]}){
     let editar_item = (index)=>{
         form_item_visible(true);
         let item = {...buy.detail[index]};
-        console.log(item);
+        
         setForm(item);
     }
-
     return (
-        <div className="w-full p-2">
+        <ContainerList title={`${buy.title} (${buy.createdAt})`} onClickAdd={()=>form_item_visible(true)} onClickBack={()=>buy_active[1]([0,-1])}>
             <div className="w-full divide-y divide-stone-300 shadow-lg bg-slate-50">
                 {
                     buy.detail.map((line,index)=>(
@@ -43,10 +41,8 @@ function List({buy_active, form_state, form_item_visible, headers=[]}){
                 }
                 
             </div>
-            <CuadroResumen buy_active={buy_active}/>
-            
-            <button className=" bg-emerald-300 w-full py-2 rounded-md text-white font-bold mt-2 " onClick={()=>form_item_visible(true)}>Agregar Item</button>
-        </div>
+            <CuadroResumen buy_active={buy_active} buys={buys}/>
+        </ContainerList>
     );
 }
 export {List}

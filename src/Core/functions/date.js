@@ -1,7 +1,11 @@
 function getDateShort(date){
-    if(typeof(date)=='string')
+    if(typeof(date)=='string'){
+        if(date.length<11) date = date+"T00:00:00";
         date = new Date(date);
-    return String(date.getDate()).padStart(2, '0') + '/' + String(date.getMonth() + 1).padStart(2, '0') + '/' + date.getFullYear();
+    }
+    let out = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    return out; 
+    
 }
 
 export {getDateShort}

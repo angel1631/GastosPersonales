@@ -1,12 +1,10 @@
-import React from "react"
-import { Context } from '../../Context';
+import React from "react";
 import {format_currency} from '../../Core/functions/number';
 
-function CuadroResumen({buy_active}){
-    let {states:{buys}} = React.useContext(Context);
+function CuadroResumen({buy_active, buys}){
     let total_gastos = 0;
-    if(buys[0][buy_active[1]].detail)
-        buys[0][buy_active[1]].detail.map(line=>{total_gastos += line.total; return true;});
+    if(buys[0][buy_active[0][1]].detail)
+        buys[0][buy_active[0][1]].detail.map(line=>{total_gastos += line.total; return true;});
     
     return(
         <div className="mt-2 float-right w-9/12  text-right">

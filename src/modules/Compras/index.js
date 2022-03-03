@@ -2,17 +2,20 @@ import React from "react";
 import { GenericForm } from "../../Core/components/GenericForm";
 
 import { List } from "./List";
-import { Context } from '../../Context';
 
 import {ListPrev} from './ListPrev';
 import { GenericList } from "../../Core/components/GenericList";
 import {getDateShort} from '../../Core/functions/date';
+import {useLocalStorage} from '../../hooks/useLocalStorage';
+
 
 function Compras() {
-  let {states} = React.useContext(Context);
-  let fields = [];
+  let states = {};
+  states.buys = useLocalStorage({nameItem: 'buys', defaultValue:[]});
+  states.items = useLocalStorage({nameItem: 'items', defaultValue:[]});
+  
   let item_searched = React.useState("");
-
+  let fields = [];
   fields.push({id: 'id', description: 'id', type: 'text', orden: 1, required:false, invisible:true});
   fields.push({id: "producto", description:'Item', type: 'text', orden:1, autoComplete:states.items[0],onBlur: (e)=>{item_searched[1](e.target.value)}});
   fields.push({id: "cantidad", description:'Cantidad', type: 'number', orden:2});
@@ -36,7 +39,6 @@ function Compras() {
     if(buys[buy_active[0][1]].id != buy_active[0][0]) throw "Error grave refrescar la pagina";
     let new_item = {producto,cantidad,precio, total: parseInt((cantidad*precio).toFixed(2))};
     if(parseInt(id)>0){
-      console.log("----------------reconocio id",id);
       buys[buy_active[0][1]].detail.map((item,index)=>{
         if(item.id==id){
           buys[buy_active[0][1]].detail[index] = new_item;
@@ -63,27 +65,29 @@ function Compras() {
   
   return (
       <div className="w-full h-full">
-          {form_buy_visible[0] && buy_active[0][0]===0 && <GenericForm title="Agregar Compras" form_state={form_buy} fields={fields_buy} function_send={create_buy} state_show_form={form_buy_visible[1]}/>}
-         
-          {buy_active[0][0]===0 && <GenericList 
-                                      title="Compras" 
-                                      lineOnClick={({line,index})=>{buy_active[1]([line.id, index])}}
-                                      state_show_form={form_buy_visible}
-                                      state_list={states.buys}
-                                      fields_display={[{col:"title", wid:'1/2'}, {col: "createdAt", wid: '1/2'}]} />}
+          {buy_active[0][0]===0 && 
+            <div className="w-full">
+               {form_buy_visible[0] && 
+                  <GenericForm title="Agregar Compras" form_state={form_buy} fields={fields_buy} function_send={create_buy} state_show_form={form_buy_visible}/>}
+                {!form_buy_visible[0] &&
+                  <GenericList 
+                  title="Listado de Compras" 
+                  lineOnClick={({line,index})=>{buy_active[1]([line.id, index])}}
+                  state_show_form={form_buy_visible}
+                  state_list={states.buys}
+                  fields_display={[{col:"title", wid:'1/2'}, {col: "createdAt", wid: '1/2'}]} />
+                }
+            </div>}
           
           {buy_active[0][0]!==0 && 
             <div className="w-full">
-              <div onClick={()=>buy_active[1]([0,-1])} className="ml-2 px-2 w-8 h-8 pt-1 bg-slate-500 rounded-full text-center align-middle">
-                <i  className="text-white font-bold ri-arrow-go-back-line"></i>
-              </div>
-              
-              {form_item_visible[0] && <GenericForm title="Agregar Items" form_state={form_item} fields={fields} function_send={create_line_product} state_show_form={form_item_visible[1]}>
-                                        <ListPrev item_searched={form_item[0].producto} />
+              {form_item_visible[0] && <GenericForm title="Agregar Items" form_state={form_item} fields={fields} function_send={create_line_product} state_show_form={form_item_visible}>
+                                        <ListPrev item_searched={form_item[0].producto} buys={states.buys} />
                                       </GenericForm>}
               
-              
-              <List headers={["producto","cantidad","precio","total"]} buy_active={buy_active[0]} form_state={form_item} form_item_visible={form_item_visible[1]}/>
+              {!form_item_visible[0] &&
+                <List buys={states.buys} headers={["producto","cantidad","precio","total"]} buy_active={buy_active} form_state={form_item} form_item_visible={form_item_visible[1]}/>
+              } 
             </div>
           }
         

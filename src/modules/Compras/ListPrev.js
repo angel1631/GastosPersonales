@@ -1,10 +1,8 @@
-import React, { useContext } from "react";
-import { Context } from "../../Context";
+import React from "react";
 import {getDateShort} from '../../Core/functions/date';
 import {format_currency} from '../../Core/functions/number';
 
-function ListPrev({item_searched}){
-    let {states: {buys}} = React.useContext(Context);
+function ListPrev({item_searched, buys}){
     let match_items = [];
     if(item_searched.length>3){
         buys[0].map((buy)=>{
